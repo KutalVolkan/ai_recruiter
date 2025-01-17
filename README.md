@@ -117,6 +117,10 @@ This repository currently supports **manual testing of vulnerabilities** in the 
 - Automating indirect prompt injection attacks.  
 
 ### **Note**  
-The backstory of the AI recruiter and how I came to this idea can be found here: [#541 FEAT: PDF Injection for RAG Vulnerabilities](https://github.com/Azure/PyRIT/issues/541).
+The idea for **PDF injection vulnerabilities** originates from [Kai Greshake's "Inject My PDF: Prompt Injection for your Resume"](https://kai-greshake.de/posts/inject-my-pdf/). This repository extends that concept by putting it into the context of **Retrieval-Augmented Generation (RAG)** systems and AI workflows. 
+
+If I missed crediting anyone involved in earlier ideas or contributions, please feel free to ping me, and I will gladly update this section to include you!  
+
+The backstory of the AI recruiter and how I came to this idea can also be found here: [#541 FEAT: PDF Injection for RAG Vulnerabilities](https://github.com/Azure/PyRIT/issues/541).  
 
 
