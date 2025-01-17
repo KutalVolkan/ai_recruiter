@@ -116,4 +116,7 @@ One of the core features of this project is to demonstrate how **invisible text 
 This repository currently supports **manual testing of vulnerabilities** in the AI recruiter workflow. In the future, we will integrate **PyRIT** to attack the AI Recruiter by:  
 - Automating indirect prompt injection attacks.  
 
+### **Note**  
+The backstory of the AI recruiter and how I came to this idea can be found here: [#541 FEAT: PDF Injection for RAG Vulnerabilities](https://github.com/Azure/PyRIT/issues/541).
+
 
