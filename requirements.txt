@@ -1,0 +1,5 @@
+pypdf
+openai
+pandas
+chromadb
+python-dotenv

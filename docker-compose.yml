@@ -1,0 +1,9 @@
+services:
+  ai_recruiter:
+    build: .
+    container_name: ai_recruiter
+    volumes:
+      - ./resume_collection:/app/resume_collection  # Mount the resume collection folder
+    env_file:
+      - .env  # Load environment variables
+    command: python ai_recruiter.py  # Run the main script
