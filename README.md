@@ -18,10 +18,6 @@ Welcome to the **AI Recruiter**, a pipeline designed to match résumés with job
   - Current: Manual injection of manipulative text, including invisible   instructions and crafted language, to explore AI vulnerabilities.
   - Future: Automation of prompt injections using **PyRIT** to test vulnerabilities in end-to-end AI workflows.
 
-- **Invisible Text Injection**:
-  - Embed invisible instructions (e.g., use white font color) into PDF résumés.
-  - Simulate **indirect prompt injection attacks** to manipulate AI decisions.
-
 - **ChromaDB Integration**:
   - Efficiently store and retrieve résumé embeddings for semantic search.
 
