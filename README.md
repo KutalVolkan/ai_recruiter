@@ -1,6 +1,6 @@
 # **AI Recruiter: RAG Vulnerability Demonstration**
 
-Welcome to the **AI Recruiter**, a pipeline designed to match résumés with job descriptions using **GPT-4o** while providing a framework to test **RAG (Retrieval-Augmented Generation) vulnerabilities** through **invisible text injection**. This project leverages **ChromaDB** for semantic search and, in the future, aims to integrate **PyRIT** with its **XPIA Orchestrator** to automate attacks, enabling red-teaming workflows for AI pipelines.
+Welcome to the **AI Recruiter**, a pipeline designed to match résumés with job descriptions using **GPT-4o** while providing a framework to test **RAG (Retrieval-Augmented Generation) vulnerabilities** through **invisible text injection**. This project leverages **ChromaDB** for semantic search and, in the future, aims to integrate **PyRIT** with its **XPIA Orchestrator** to automate attacks, enabling ai red-teaming workflows for AI pipelines.
 
 ---
 
@@ -15,11 +15,11 @@ Welcome to the **AI Recruiter**, a pipeline designed to match résumés with job
     - Match score (1-10)
 
 - **RAG Vulnerability Testing**:
-  - Current: Manual injection of invisible text to explore AI weaknesses.
+  - Current: Manual injection of manipulative text, including invisible   instructions and crafted language, to explore AI vulnerabilities.
   - Future: Automation of prompt injections using **PyRIT** to test vulnerabilities in end-to-end AI workflows.
 
 - **Invisible Text Injection**:
-  - Embed invisible instructions (e.g., hidden font) into PDF résumés.
+  - Embed invisible instructions (e.g., use white font color) into PDF résumés.
   - Simulate **indirect prompt injection attacks** to manipulate AI decisions.
 
 - **ChromaDB Integration**:
@@ -33,14 +33,12 @@ This project demonstrates how **RAG workflows** can be exploited via indirect pr
 
 ### **Scenario**
 1. **Résumé Processing**: An AI-powered recruiter processes uploaded résumés to match them with job descriptions.
-2. **Indirect Prompt Injection**: Attackers embed **invisible text** into PDF résumés, introducing subtle manipulations that influence GPT-4o’s evaluation.
-3. **Evaluation Impact**: The AI recruiter pipeline evaluates candidates and highlights the impact of these vulnerabilities.
+2. **Indirect Prompt Injection**: Attackers embed **manipulative text** (including invisible or subtly crafted language) into PDF résumés to influence the AI recruiter’s evaluation process. This text could aim to manipulate the AI into favoring the candidate by steering its decision-making.  
+3. **Evaluation Impact**: The AI recruiter processes the manipulated résumés, and its evaluation is influenced to favor the attacker’s input. This demonstrates how such vulnerabilities can affect the fairness and reliability of AI-driven systems.  
 
 ---
 
 ## **Setup**
-
-
 
 ### **Installation**
 
@@ -62,8 +60,9 @@ This project demonstrates how **RAG workflows** can be exploited via indirect pr
      OPENAI_KEY=your_openai_api_key
      ```
 
-4. Add résumés:
-   - Place PDF files in the `resume_collection` folder.
+4. Add Résumés:  
+   - Place PDF files in the `resume_collection` folder.  
+   - Include both original (non-manipulated) and manipulated versions of the same résumés to compare how the AI Recruiter evaluates them.  
 
 5. Run the AI Recruiter:
    ```bash
@@ -72,50 +71,12 @@ This project demonstrates how **RAG workflows** can be exploited via indirect pr
 
 ---
 
-## **Manual Indirect Prompt Injection**
-
-One of the core features of this project is to demonstrate how **invisible text injection** in PDF files can manipulate AI-driven workflows. This process involves embedding hidden instructions into résumés to simulate **indirect prompt injection attacks**.
-
-### **Steps**
-
-1. **Prepare Your PDF File**:
-   - Place the PDF résumé you want to manipulate in the `resume_collection` folder (e.g., `resume.pdf`).
-
-2. **Run the AI Recruiter**:
-   Process the injected résumé:
-   ```bash
-   python ai_recruiter.py
-   ```
-
-3. **Analyze the Results**:
-   Observe whether the hidden instructions affected the evaluation results.
-
----
-
-## **Workflow Overview**
-
-1. **Résumé Matching**:
-   - Extract résumé content, generate embeddings, and store them in ChromaDB.
-   - Retrieve top matches using semantic search.
-
-2. **AI Evaluation**:
-   - Use GPT-4o to evaluate candidates for strengths, gaps, and relevance.
-
-3. **Manual Indirect Prompt Injection**:
-   - Embed hidden instructions into PDFs and observe AI responses.
-
-4. **Automated Attacks (Planned)**:
-   - Use PyRIT to automate attacks against the AI Recruiter pipeline.
-   - Test the pipeline’s ability to withstand RAG-related vulnerabilities.
-
----
-
-
 ## **Next Steps**
 
 This repository currently supports **manual testing of vulnerabilities** in the AI recruiter workflow. In the future, we will integrate **PyRIT** to attack the AI Recruiter by:  
 - Automating indirect prompt injection attacks.  
 
+--- 
 ### **Note**  
 The idea for **PDF injection vulnerabilities** originates from [Kai Greshake's "Inject My PDF: Prompt Injection for your Resume"](https://kai-greshake.de/posts/inject-my-pdf/). This repository extends that concept by putting it into the context of **Retrieval-Augmented Generation (RAG)** systems and AI workflows. 
 
