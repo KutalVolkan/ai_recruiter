@@ -10,9 +10,5 @@ __pycache__/
 .vscode/
 .idea/
 
-# Ignore the multi_agent folder
-multi_agent/
-
 # Ignore caching
 .cache/
-

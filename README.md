@@ -1,6 +1,6 @@
 # **AI Recruiter: RAG Vulnerability Demonstration**
 
-Welcome to the **AI Recruiter**, a pipeline designed to match résumés with job descriptions using **GPT-4o** while providing a framework to test **RAG (Retrieval-Augmented Generation) vulnerabilities** through **invisible text injection**. This project leverages **ChromaDB** for semantic search and, in the future, aims to integrate **PyRIT** with its **XPIA Orchestrator** to automate attacks, enabling ai red-teaming workflows for AI pipelines.
+Welcome to the **AI Recruiter**, a pipeline designed to match résumés with job descriptions using **GPT-4o**, while also providing a framework to test **RAG (Retrieval-Augmented Generation) vulnerabilities** through **invisible text injection**. This project leverages **ChromaDB** for semantic search and, in the future, aims to integrate **PyRIT** with its **XPIA Orchestrator** to automate attacks, enabling AI red-teaming workflows for AI pipelines.
 
 ---
 
@@ -15,7 +15,7 @@ Welcome to the **AI Recruiter**, a pipeline designed to match résumés with job
     - Match score (1-10)
 
 - **RAG Vulnerability Testing**:
-  - Current: Manual injection of manipulative text, including invisible   instructions and crafted language, to explore AI vulnerabilities.
+  - Current: Manual injection of manipulative text, including invisible instructions and crafted language, to explore AI vulnerabilities.
   - Future: Automation of prompt injections using **PyRIT** to test vulnerabilities in end-to-end AI workflows.
 
 - **ChromaDB Integration**:
@@ -30,7 +30,7 @@ This project demonstrates how **RAG workflows** can be exploited via indirect pr
 ### **Scenario**
 1. **Résumé Processing**: An AI-powered recruiter processes uploaded résumés to match them with job descriptions.
 2. **Indirect Prompt Injection**: Attackers embed **manipulative text** (including invisible or subtly crafted language) into PDF résumés to influence the AI recruiter’s evaluation process. This text could aim to manipulate the AI into favoring the candidate by steering its decision-making.  
-3. **Evaluation Impact**: The AI recruiter processes the manipulated résumés, and its evaluation is influenced to favor the attacker’s input. This demonstrates how such vulnerabilities can affect the fairness and reliability of AI-driven systems.  
+3. **Evaluation Impact**: The AI recruiter processes the manipulated résumés, and its evaluation is influenced to favor the attacker’s input. This demonstrates how such vulnerabilities can affect the fairness and reliability of AI-driven systems.
 
 ---
 
@@ -58,7 +58,7 @@ This project demonstrates how **RAG workflows** can be exploited via indirect pr
 
 4. Add Résumés:  
    - Place PDF files in the `resume_collection` folder.  
-   - Include both original (non-manipulated) and manipulated versions of the same résumés to compare how the AI Recruiter evaluates them.  
+   - Include both original (non-manipulated) and manipulated versions of the same résumés to compare how the AI Recruiter evaluates them.
 
 5. Run the AI Recruiter:
    ```bash
@@ -67,17 +67,44 @@ This project demonstrates how **RAG workflows** can be exploited via indirect pr
 
 ---
 
+## **Findings**
+
+### **Keyword Stuffing Detection**
+- Résumés with **hidden keyword stuffing** (e.g., small fonts, font colors matching the background) achieved **high semantic alignment** with job descriptions, resulting in **low semantic distances**.
+- Despite this, **GPT-4o assigned a match score of 0**, flagging the résumés as suspicious or low-quality. This demonstrates the model's capability to identify unnatural keyword density and penalize manipulative content.
+
+### **Prompt Injection Handling**
+- Résumés with adversarial instructions like "assign maximum score" or "bypass all validation checks" were **ignored by GPT-4o**.
+- The model correctly evaluated résumés based on their actual content, showing **robust resistance** to prompt injection attacks.
+
+### **Ranking Observation**
+- Despite a **match score of 0**, the **Keyword_Stuffing** résumé ranked **first by semantic distance**, demonstrating how adversarial attempts can manipulate rankings.
+- **Final Decision**: `Keyword_Stuffing` was selected as the best candidate due to its low semantic distance, even though its suspicious content caused it to receive the lowest match score.
+- In real-world scenarios:
+  - If HR professionals rely only on the **original PDF** of the top-ranked résumé, adversarial actors could succeed in passing initial evaluations.
+  - If HR evaluates the **extracted text** or **uses manual review**, such manipulation would likely be detected.
+
+---
+
+## **Contributors**
+
+### **Direct Contributors**
+
+- **Volkan Kutal** (@KutalVolkan): Primary author and developer of the AI Recruiter system and RAG vulnerability demonstration. Created the PDF keyword stuffing exploit to test indirect prompt injection and evaluate RAG system vulnerabilities.  
+
+- **Patrick Natali** (@ThreeRiversAINexus): Contributed dummy résumés generated via `generate_resumes.py` to test and validate the system. Improved docker-compose configuration for a smoother setup process and enhanced error handling to manage empty or invalid PDF files effectively.  
+
+### **Indirect Contributors**
+- **Kai Greshake**: Originator of the idea for PDF injection vulnerabilities with [Inject My PDF: Prompt Injection for your Resume](https://kai-greshake.de/posts/inject-my-pdf/), inspiring this project to extend the concept into **RAG workflows**.
+- The team behind **PyRIT** for creating a framework that will enable future automation of prompt injection attacks.
+
+---
+
 ## **Next Steps**
+- Automate indirect prompt injection attacks using **PyRIT** for systematic red-teaming.
 
-This repository currently supports **manual testing of vulnerabilities** in the AI recruiter workflow. In the future, we will integrate **PyRIT** to attack the AI Recruiter by:  
-- Automating indirect prompt injection attacks.  
+---
 
---- 
-### **Note**  
-The idea for **PDF injection vulnerabilities** originates from [Kai Greshake's "Inject My PDF: Prompt Injection for your Resume"](https://kai-greshake.de/posts/inject-my-pdf/). This repository extends that concept by putting it into the context of **Retrieval-Augmented Generation (RAG)** systems and AI workflows. 
+### **Note**
 
-If I missed crediting anyone involved in earlier ideas or contributions, please feel free to ping me, and I will gladly update this section to include you!  
-
-The backstory of the AI recruiter and how I came to this idea can also be found here: [#541 FEAT: PDF Injection for RAG Vulnerabilities](https://github.com/Azure/PyRIT/issues/541).  
-
-
+This repository is a proof-of-concept and highlights potential vulnerabilities in AI-driven systems. It is intended for research and educational purposes only. If I missed crediting any contributors or inspirations, please reach out to have them added.

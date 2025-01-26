@@ -1,3 +1,5 @@
+Faker==20.1.0
+pandoc==2.3
 pypdf
 openai
 pandas
