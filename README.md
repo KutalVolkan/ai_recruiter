@@ -101,10 +101,11 @@ This project demonstrates how **RAG workflows** can be exploited via indirect pr
 ---
 
 ## **Next Steps**
-- Automate indirect prompt injection attacks using **PyRIT** for systematic red-teaming.
+- Automate indirect prompt injection attacks using **PyRIT** for systematic ai red-teaming.
 
 ---
 
-### **Note**
+### **Note**  
+The backstory of the AI recruiter and how I came to this idea can be found here: [#541 FEAT: PDF Injection for RAG Vulnerabilities](https://github.com/Azure/PyRIT/issues/541).  
 
 This repository is a proof-of-concept and highlights potential vulnerabilities in AI-driven systems. It is intended for research and educational purposes only. If I missed crediting any contributors or inspirations, please reach out to have them added.
