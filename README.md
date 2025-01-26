@@ -96,7 +96,7 @@ This project demonstrates how **RAG workflows** can be exploited via indirect pr
 
 ### **Indirect Contributors**
 - **Kai Greshake**: Originator of the idea for PDF injection vulnerabilities with [Inject My PDF: Prompt Injection for your Resume](https://kai-greshake.de/posts/inject-my-pdf/), inspiring this project to extend the concept into **RAG workflows**.
-- The team behind **PyRIT** for creating a framework that will enable future automation of prompt injection attacks.
+- The team behind **PyRIT** for creating a framework that enables fully automatic and semi-automatic execution of prompt injection attacks.
 
 ---
 
