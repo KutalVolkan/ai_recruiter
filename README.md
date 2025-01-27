@@ -71,7 +71,7 @@ This project demonstrates how **RAG workflows** can be exploited via indirect pr
 
 ### **Keyword Stuffing Detection**
 - Résumés with **hidden keyword stuffing** (e.g., small fonts, font colors matching the background) achieved **high semantic alignment** with job descriptions, resulting in **low semantic distances**.
-- Despite this, **GPT-4o assigned a match score of 0**, flagging the résumés as suspicious or low-quality. This demonstrates the model's capability to identify unnatural keyword density and penalize manipulative content.
+- Despite this, **GPT-4o assigned a match score of 0**, flagging the résumés as suspicious or low-quality. This demonstrates the model's capability to identify unnatural keyword density and penalize manipulative content. The `keyword_stuffing_v2` bypasses this type of response. Instead of blatant keyword stuffing (e.g., buzzwords in `<span>` tags), it converts them into more meaningful text. This not only achieves higher scores but also the lowest semantic distance, indicating maximum similarity like before.
 
 ### **Prompt Injection Handling**
 - Résumés with adversarial instructions like "assign maximum score" or "bypass all validation checks" were **ignored by GPT-4o**.
