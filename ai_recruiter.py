@@ -32,7 +32,8 @@ def extract_text_from_pdf(pdf_path):
             page = reader.pages[page_num]
             extracted = page.extract_text()
             if extracted:
-                text += extracted + " "
+                text += extracted.strip() + " "  # Ensure clean whitespace
+    text = re.sub(r'\s+', ' ', text)  # Remove excessive spaces and newlines
     return text.strip()
 
 pdf_directory = r'./resume_collection'
@@ -57,7 +58,12 @@ for filename in os.listdir(pdf_directory):
 if not resumes:
     print("No resume content found. Add PDFs to the resume_collection directory.")
     raise SystemExit
-
+        
+# If there are no resumes, throw an error
+# and inform the user of the issue
+if not resumes:
+    print("No resume content found. Add PDFs to the resume_collection directory.")
+    raise SystemExit
 
 # -------------------------
 # Step 3: Generate Embeddings
@@ -96,9 +102,6 @@ collection.add(
     embeddings=embeddings
 )
 
-print(f"Number of vectors in the ChromaDB collection: {collection.count()}")
-print("Debug: Documents in Collection:", documents)  
-
 # -------------------------
 # Step 5: Perform Semantic Search with ChromaDB
 # -------------------------
@@ -115,7 +118,6 @@ def search_candidates(job_description_text, k=5):
         include=['documents', 'metadatas', 'distances']  # Ensure documents are included
     )
 
-    print("Debug: Query Results:", results)  
 
     if not results or not results.get('documents') or len(results['documents'][0]) == 0:
         print("No results found.")
@@ -124,10 +126,6 @@ def search_candidates(job_description_text, k=5):
     documents = results.get('documents', [[]])[0] or ["No content available"]
     metadatas = results.get('metadatas', [[]])[0]
     distances = results.get('distances', [[]])[0]
-
-    print("Debug: Documents:", documents) 
-    print("Debug: Metadata:", metadatas) 
-    print("Debug: Distances:", distances) 
 
     top_candidates = []
     for i in range(min(len(documents), k)):  # Ensure we don't exceed available results
@@ -203,17 +201,21 @@ def evaluate_candidates(job_description, candidates, model="gpt-4o"):
         # Evaluate the candidate with GPT-4o
         evaluation = evaluate_candidate(job_description, candidate_name, candidate_text, model=model)
 
+         # Extract match score from evaluation
+        match_score = extract_match_score(evaluation) or 0  # Default to 0 if not found
+
         # Append detailed evaluation for output
         evaluations.append({
             'name': candidate_name,
-            'evaluation': evaluation,
-            'distance': candidate['distance']
+            'match_score': match_score,
+            'distance': round(candidate['distance'], 4)
         })
 
         # Add to memory for decision-making
         memory.append({
             'name': candidate_name,
-            'score': extract_match_score(evaluation) or 0,  # Fallback score if not found
+            'score': match_score,
+            'distance': candidate['distance'],
             'text': candidate_text
         })
 
@@ -247,48 +249,4 @@ def make_final_decision(memory):
 
     return (
         f"Best Candidate: {best_candidate['name']} with a Match Score of {best_candidate['score']}/10.\n"
-        f"Résumé Summary: {best_candidate['text']}"
     )
-
-# -------------------------
-# Example Usage
-# -------------------------
-if __name__ == "__main__":
-    job_description = """
-    We are seeking a highly motivated and experienced Software Engineer with strong expertise in Python and Machine Learning. 
-    The ideal candidate will have experience designing and developing scalable machine learning models and integrating them into software systems.
-
-    Key Responsibilities:
-    - Design, develop, and deploy machine learning models in production.
-    - Collaborate with cross-functional teams to build scalable and efficient software systems.
-    - Optimize Python code for performance and scalability.
-    - Use cloud platforms like AWS, GCP, or Azure for deployment and orchestration.
-    - Follow Agile methodologies and work in a collaborative environment.
-
-    Required Skills:
-    - Strong proficiency in Python and experience with machine learning libraries like TensorFlow or PyTorch.
-    - Familiarity with cloud platforms (AWS, GCP, or Azure).
-    - Experience with Docker, Kubernetes, and CI/CD pipelines.
-    - Strong problem-solving skills and the ability to debug complex issues.
-    - A degree in Computer Science, Data Science, or a related field.
-
-    Preferred Qualifications:
-    - Prior experience with NLP, computer vision, or recommendation systems.
-    - Familiarity with React or Node.js is a plus.
-    - Strong communication skills and experience working in Agile teams.
-    """
-    
-    # Step 1: Retrieve top candidates from semantic search
-    top_matches = search_candidates(job_description, k=3)
-
-    # Step 2: Evaluate those candidates with AI Recruiter
-    candidate_evaluations, final_decision = evaluate_candidates(job_description, top_matches, model="gpt-4o")
-
-    # Display evaluation results
-    print(f"Job Description: {job_description}\n")
-    for idx, result in enumerate(candidate_evaluations, start=1):
-        print(f"Candidate {idx} Name: {result['name']}")
-        print(f"Distance: {result['distance']:.4f}")
-        print(f"AI Recruiter Evaluation:\n{result['evaluation']}\n")
-
-    print(f"Final Decision:\n{final_decision}")

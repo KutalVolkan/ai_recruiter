@@ -5,3 +5,6 @@ openai
 pandas
 chromadb
 python-dotenv
+fastapi
+uvicorn
+python-multipart

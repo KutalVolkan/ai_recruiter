@@ -7,7 +7,10 @@ services:
     user: "${UID:-1000}:${GID:-1000}"  # Map container user to host user
     env_file:
       - .env  # Load environment variables
-    command: python ai_recruiter.py  # Run the main script
+    ports:
+      - "8000:8000"  # Expose FastAPI on port 8000
+    command: uvicorn fastapi_server:app --host 0.0.0.0 --port 8000 --reload
+
 
   resume_generator:
     build: .
@@ -16,3 +19,5 @@ services:
       - ./resume_collection:/app/resume_collection  # Mount the resume collection folder
     user: "${UID:-1000}:${GID:-1000}"  # Map container user to host user
     command: python generate_resumes.py  # Run the resume generation script
+    profiles:
+      - generator
