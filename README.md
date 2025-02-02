@@ -35,7 +35,6 @@ This project demonstrates how **RAG workflows** can be exploited via indirect pr
 ---
 
 ## **Docker Setup**
-Docker Setup
 For Docker-based deployment, refer to the [Docker Setup Guide](docker_setup/readme.md)
 
 ---
@@ -65,7 +64,7 @@ For Docker-based deployment, refer to the [Docker Setup Guide](docker_setup/read
 
 - **Volkan Kutal** (@KutalVolkan): Primary author and developer of the AI Recruiter system and RAG vulnerability demonstration. Created the PDF keyword stuffing exploit to test indirect prompt injection and evaluate RAG system vulnerabilities.  
 
-- **Patrick Natali** (@ThreeRiversAINexus): Contributed dummy résumés generated via `generate_resumes.py` to test and validate the system. Improved docker-compose configuration for a smoother setup process and enhanced error handling to manage empty or invalid PDF files effectively.  
+- **Patrik Natali** (@ThreeRiversAINexus): Contributed dummy résumés generated via `generate_resumes.py` to test and validate the system. Improved docker-compose configuration for a smoother setup process and enhanced error handling to manage empty or invalid PDF files effectively.  
 
 ### **Indirect Contributors**
 - **Kai Greshake**: Originator of the idea for PDF injection vulnerabilities with [Inject My PDF: Prompt Injection for your Resume](https://kai-greshake.de/posts/inject-my-pdf/), inspiring this project to extend the concept into **RAG workflows**.
