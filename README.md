@@ -34,36 +34,9 @@ This project demonstrates how **RAG workflows** can be exploited via indirect pr
 
 ---
 
-## **Setup**
-
-### **Installation**
-
-#### Local Setup
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/KutalVolkan/ai_recruiter.git
-   cd ai_recruiter
-   ```
-
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Configure environment variables:
-   - Create a `.env` file with:
-     ```env
-     OPENAI_KEY=your_openai_api_key
-     ```
-
-4. Add Résumés:  
-   - Place PDF files in the `resume_collection` folder.  
-   - Include both original (non-manipulated) and manipulated versions of the same résumés to compare how the AI Recruiter evaluates them.
-
-5. Run the AI Recruiter:
-   ```bash
-   python ai_recruiter.py
-   ```
+## **Docker Setup**
+Docker Setup
+For Docker-based deployment, refer to the [Docker Setup Guide](docker_setup/readme.md)
 
 ---
 
