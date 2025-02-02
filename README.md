@@ -67,17 +67,19 @@ For Docker-based deployment, refer to the [Docker Setup Guide](docker_setup/read
 - **Patrik Natali** (@ThreeRiversAINexus): Contributed dummy résumés generated via `generate_resumes.py` to test and validate the system. Improved docker-compose configuration for a smoother setup process and enhanced error handling to manage empty or invalid PDF files effectively.  
 
 ### **Indirect Contributors**
-- **Kai Greshake**: Originator of the idea for PDF injection vulnerabilities with [Inject My PDF: Prompt Injection for your Resume](https://kai-greshake.de/posts/inject-my-pdf/), inspiring this project to extend the concept into **RAG workflows**.
-- The team behind **PyRIT** for creating a framework that enables fully automatic and semi-automatic execution of prompt injection attacks.
 
----
+- **Kai Greshake** – Originator of the **PDF-based prompt injection** concept with [Inject My PDF: Prompt Injection for Your Resume](https://kai-greshake.de/posts/inject-my-pdf/). This project expands upon that idea, integrating it into **Retrieval-Augmented Generation (RAG) workflows** to explore broader applications and security implications.
 
-## **Next Steps**
-- Automate indirect prompt injection attacks using **PyRIT** for systematic ai red-teaming.
+- The team behind **[PyRIT](https://github.com/Azure/PyRIT)** – For developing a framework that enables **fully automated and semi-automated prompt injection attacks**, contributing to research in adversarial AI security.
+
 
 ---
 
 ### **Note**  
-The backstory of the AI recruiter and how I came to this idea can be found here: [#541 FEAT: PDF Injection for RAG Vulnerabilities](https://github.com/Azure/PyRIT/issues/541).  
 
-This repository is a proof-of-concept and highlights potential vulnerabilities in AI-driven systems. It is intended for research and educational purposes only. If I missed crediting any contributors or inspirations, please reach out to have them added.
+The backstory of the **AI Recruiter** and the inspiration behind this idea can be found in this discussion:  
+📌 [#541 FEAT: PDF Injection for RAG Vulnerabilities](https://github.com/Azure/PyRIT/issues/541).  
+
+This repository serves as a **proof of concept**, demonstrating potential vulnerabilities in AI-driven systems. It is strictly intended for **research and educational purposes**.  
+
+If I have unintentionally omitted credit for any contributors or inspirations, please reach out, and I will gladly update the acknowledgments.  
