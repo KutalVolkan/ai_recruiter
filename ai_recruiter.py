@@ -1,5 +1,6 @@
 import os
 import re
+import logging
 from pypdf import PdfReader
 from openai import OpenAI
 import pandas as pd
@@ -7,6 +8,10 @@ import chromadb
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
 
 # -------------------------
 # Step 1: Initialize Chroma Client and Create Collection
@@ -49,6 +54,7 @@ for filename in os.listdir(pdf_directory):
                 'name': os.path.splitext(filename)[0],  # Assuming filename is the candidate's name
                 'text': extracted_text
             })
+            logger.info(f"Processed resume: {filename}")
         # Capture pypdf EmptyFileError
         except Exception as e:
             print(f"Error processing {pdf_path}: {e}")
@@ -56,13 +62,7 @@ for filename in os.listdir(pdf_directory):
 # If there are no resumes, throw an error
 # and inform the user of the issue
 if not resumes:
-    print("No resume content found. Add PDFs to the resume_collection directory.")
-    raise SystemExit
-        
-# If there are no resumes, throw an error
-# and inform the user of the issue
-if not resumes:
-    print("No resume content found. Add PDFs to the resume_collection directory.")
+    logger.error("No resume content found. Add PDFs to the resume_collection directory.")
     raise SystemExit
 
 # -------------------------
@@ -80,6 +80,8 @@ def get_embedding(text, model="text-embedding-3-small"):
 # Generate embeddings for each résumé
 for resume in resumes:
     resume['embedding'] = get_embedding(resume['text'])
+    logger.info(f"Generated embedding for: {resume['name']} | Embedding size: {len(resume['embedding']) if resume['embedding'] else 'FAILED'}")
+
 
 # -------------------------
 # Step 4: Store Embeddings in ChromaDB
@@ -102,6 +104,8 @@ collection.add(
     embeddings=embeddings
 )
 
+logger.info(f"Stored {len(resumes)} resumes in ChromaDB.")
+
 # -------------------------
 # Step 5: Perform Semantic Search with ChromaDB
 # -------------------------
@@ -110,6 +114,9 @@ def search_candidates(job_description_text, k=5):
     """Searches for the top k candidates that best match the job description."""
     # Generate embedding for the job description
     job_embedding = get_embedding(job_description_text)
+
+    # Log job description being processed
+    logger.info("Performing similarity search for job description...")
 
     # Perform similarity search in ChromaDB
     results = collection.query(
@@ -120,7 +127,7 @@ def search_candidates(job_description_text, k=5):
 
 
     if not results or not results.get('documents') or len(results['documents'][0]) == 0:
-        print("No results found.")
+        logger.warning("No matching candidates found.")
         return []
 
     documents = results.get('documents', [[]])[0] or ["No content available"]
@@ -132,6 +139,9 @@ def search_candidates(job_description_text, k=5):
         result = documents[i]
         metadata = metadatas[i]
         distance = distances[i]
+
+        logger.info(f"Candidate: {metadata.get('name', 'Unknown')} | Distance: {distance}")
+        
         top_candidates.append({
             'name': metadata.get('name', 'Unknown'),
             'text': result,  # Store full text for AI Recruiter
@@ -198,11 +208,15 @@ def evaluate_candidates(job_description, candidates, model="gpt-4o"):
         candidate_name = candidate['name']
         candidate_text = candidate['text']
 
+        logger.info(f"Evaluating Candidate: {candidate_name}")
+
         # Evaluate the candidate with GPT-4o
         evaluation = evaluate_candidate(job_description, candidate_name, candidate_text, model=model)
 
          # Extract match score from evaluation
         match_score = extract_match_score(evaluation) or 0  # Default to 0 if not found
+
+        logger.info(f"Match Score for {candidate_name}: {match_score}/10")
 
         # Append detailed evaluation for output
         evaluations.append({
@@ -221,6 +235,8 @@ def evaluate_candidates(job_description, candidates, model="gpt-4o"):
 
     # Make the final decision
     decision = make_final_decision(memory)
+    logger.info(f"Final Decision: {decision}")
+
     return evaluations, decision
 
 def extract_match_score(evaluation_text):

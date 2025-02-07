@@ -3,7 +3,14 @@ from fastapi.responses import JSONResponse
 import os
 import shutil
 import uvicorn
-from ai_recruiter import search_candidates, evaluate_candidates
+import logging
+from ai_recruiter import search_candidates, evaluate_candidates, extract_text_from_pdf, get_embedding, collection
+
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
+
 
 app = FastAPI()
 
@@ -16,6 +23,29 @@ async def upload_resume(file: UploadFile = File(...)):
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
+
+    # Log file upload
+    logger.info(f"Uploaded and saved: {file.filename}")
+
+    # Extract text from uploaded resume
+    extracted_text = extract_text_from_pdf(file_path)
+    if not extracted_text.strip():
+        logger.warning(f"No text extracted from {file.filename}. Skipping embedding.")
+        return {"message": f"File uploaded but no text extracted: {file.filename}"}
+
+    # Generate embedding
+    embedding = get_embedding(extracted_text)
+    logger.info(f"Generated embedding for: {file.filename} | Embedding size: {len(embedding)}")
+
+    # Store new resume in ChromaDB
+    collection.add(
+        documents=[extracted_text],
+        metadatas=[{"name": os.path.splitext(file.filename)[0]}],
+        ids=[file.filename],
+        embeddings=[embedding]
+    )
+
+    logger.info(f"Stored {file.filename} in ChromaDB.")
     
     return JSONResponse(content={"message": "File uploaded successfully", "filename": file.filename})
 
