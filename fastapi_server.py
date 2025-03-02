@@ -1,11 +1,17 @@
-from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import JSONResponse
+import logging
 import os
 import shutil
-import uvicorn
-import logging
-from ai_recruiter import search_candidates, evaluate_candidates, extract_text_from_pdf, get_embedding, collection
 
+import uvicorn
+from ai_recruiter import (
+    collection,
+    evaluate_candidates,
+    extract_text_from_pdf,
+    get_embedding,
+    search_candidates,
+)
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import JSONResponse
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -17,9 +23,33 @@ app = FastAPI()
 UPLOAD_FOLDER = "./resume_collection"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+
+@app.get("/health")
+def health_check():
+    """
+    Health Check Endpoint.
+
+    Returns:
+        dict: A simple JSON response indicating that the service is running.
+    """
+    return {"status": "ok"}
+
+
 @app.post("/upload/")
 async def upload_resume(file: UploadFile = File(...)):
-    """Handles PDF resume uploads and processes the resume immediately."""
+    """
+    Upload and Process Resume.
+
+    This endpoint accepts a PDF file upload, saves it locally, extracts text from the PDF,
+    generates an embedding from the extracted text, and stores the resume data in ChromaDB.
+
+    Args:
+        file (UploadFile): The uploaded PDF file containing a resume.
+
+    Returns:
+        JSONResponse: A response indicating whether the file was successfully processed,
+                      including the filename or an error message if text extraction fails.
+    """
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
@@ -42,19 +72,35 @@ async def upload_resume(file: UploadFile = File(...)):
         documents=[extracted_text],
         metadatas=[{"name": os.path.splitext(file.filename)[0]}],
         ids=[file.filename],
-        embeddings=[embedding]
+        embeddings=[embedding],
     )
 
     logger.info(f"Stored {file.filename} in ChromaDB.")
-    
+
     return JSONResponse(content={"message": "File uploaded successfully", "filename": file.filename})
+
 
 @app.post("/search_candidates/")
 async def search_and_evaluate(top_k: int = 5):
-    """Searches resumes against a hardcoded job description and ranks them based on AI evaluation."""
+    """
+    Search and Evaluate Candidate Resumes.
+
+    This endpoint uses a hardcoded job description to search for matching resumes stored in ChromaDB.
+    It then evaluates the candidates using an AI-powered evaluation process and returns a ranked list of
+    candidate evaluations along with a final hiring decision.
+
+    Args:
+        top_k (int, optional): The number of top candidate matches to retrieve. Defaults to 5.
+
+    Returns:
+        JSONResponse: A response containing the list of candidate evaluations and the final decision.
+    """
+
     job_description = """
-    We are seeking a highly motivated and experienced Software Engineer with strong expertise in Python and Machine Learning. 
-    The ideal candidate will have experience designing and developing scalable machine learning models and integrating them into software systems.
+    We are seeking a highly motivated and experienced Software Engineer
+    with strong expertise in Python and Machine Learning.
+    The ideal candidate will have experience designing and developing scalable machine learning models
+    and integrating them into software systems.
 
     Key Responsibilities:
     - Design, develop, and deploy machine learning models in production.
@@ -75,13 +121,14 @@ async def search_and_evaluate(top_k: int = 5):
     - Familiarity with React or Node.js is a plus.
     - Strong communication skills and experience working in Agile teams.
     """
-    
+
     top_matches = search_candidates(job_description, k=top_k)
     if not top_matches:
         return JSONResponse(content={"message": "No candidates found."})
-    
+
     candidate_evaluations, final_decision = evaluate_candidates(job_description, top_matches)
     return JSONResponse(content={"top_candidates": candidate_evaluations, "final_decision": final_decision})
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
