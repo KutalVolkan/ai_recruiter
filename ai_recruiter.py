@@ -19,7 +19,7 @@ chat_client = AzureOpenAI(
     azure_endpoint=os.getenv("AZURE_OPENAI_CHAT_ENDPOINT"),
     azure_deployment=os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT"),
     api_key=os.getenv("AZURE_OPENAI_CHAT_KEY"),
-    api_version="2024-05-13",
+    api_version="2024-12-01-preview",
 )
 
 embedding_client = AzureOpenAI(
@@ -33,8 +33,6 @@ embedding_client = AzureOpenAI(
 # -------------------------
 # Step 1: Initialize Chroma Client and Create Collection
 # -------------------------
-
-# Initialize Chroma client and create (or get) the collection
 chroma_client = chromadb.Client()
 collection_name = "resume_collection"
 collection = chroma_client.get_or_create_collection(name=collection_name)
@@ -43,8 +41,6 @@ collection = chroma_client.get_or_create_collection(name=collection_name)
 # -------------------------
 # Step 2: Extract Text from PDFs
 # -------------------------
-
-
 def extract_text_from_pdf(pdf_path):
     """
     Extracts and cleans text from a PDF file.
@@ -96,8 +92,6 @@ if not resumes:
 # -------------------------
 # Step 3: Generate Embeddings
 # -------------------------
-
-
 def get_embedding(text, model="text-embedding-3-small"):
     """
     Generates an embedding for the given text using OpenAI's API.
@@ -126,8 +120,6 @@ for resume in resumes:
 # -------------------------
 # Step 4: Store Embeddings in ChromaDB
 # -------------------------
-
-# Create a DataFrame for easier manipulation
 df = pd.DataFrame(resumes)
 
 # Prepare data for ChromaDB
@@ -145,8 +137,6 @@ logger.info(f"Stored {len(resumes)} resumes in ChromaDB.")
 # -------------------------
 # Step 5: Perform Semantic Search with ChromaDB
 # -------------------------
-
-
 def search_candidates(job_description_text, k=3):
     """
     Searches for the top k candidates that best match the job description.
@@ -201,8 +191,6 @@ def search_candidates(job_description_text, k=3):
 # -------------------------
 # Step 6: AI Recruiter (GPT-4o) to Evaluate Résumés
 # -------------------------
-
-
 def evaluate_candidate(job_description, candidate_name, candidate_text, model="gpt-4o"):
     """
     Uses GPT-4o to evaluate how well a candidate matches the job description.
