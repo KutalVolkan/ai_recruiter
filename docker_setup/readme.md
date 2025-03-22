@@ -11,7 +11,14 @@ $ cp .env.example .env
 ---
 
 ### 2️⃣ Run with Docker
+**Important:** Ensure Docker is running on your machine.
+- On Windows/macOS, start **Docker Desktop**
+- On Linux, ensure the **Docker daemon** is active  
 
+
+You have two options to run the services:
+
+---
 #### **Option 1: Run Everything in One Command**
 > **Note:** The `resume_generator` service can take a really long time to run. If you don't need to generate new résumés and would rather use the provided example CVs from `resume_collection`, consider running the services separately.
 
