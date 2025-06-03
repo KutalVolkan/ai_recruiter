@@ -12,3 +12,6 @@ __pycache__/
 
 # Ignore caching
 .cache/
+
+# Ignore virtual environment
+.venv/
