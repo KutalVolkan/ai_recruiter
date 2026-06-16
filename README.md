@@ -2,6 +2,8 @@
 
 Welcome to the AI Recruiter, a pipeline designed to match résumés with job descriptions using GPT-4o, while also providing a framework to test RAG (Retrieval-Augmented Generation) vulnerabilities through Indirect Prompt Injection (IPI), also referred to as XPIA. This project leverages ChromaDB for semantic search and aims to integrate PyRIT with its XPIA Orchestrator to automate attacks, enabling AI red-teaming workflows for AI pipelines.
 
+> **Expanded version:** A larger companion lab, with progressive defense levels (L0-L3), appears in *AI Red Teaming in Practice* (Packt, 2026).
+
 ---
 
 ## **Features**
