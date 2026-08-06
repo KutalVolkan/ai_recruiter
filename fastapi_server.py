@@ -5,13 +5,14 @@ import shutil
 import uvicorn
 from ai_recruiter import (
     collection,
-    evaluate_candidates,
     extract_text_from_pdf,
-    get_embedding,
-    search_candidates,
+    get_embedding
 )
+
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
+from autonomous_agent import run_autonomous_recruiter_agent
+
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -122,12 +123,8 @@ async def search_and_evaluate(top_k: int = 5):
     - Strong communication skills and experience working in Agile teams.
     """
 
-    top_matches = search_candidates(job_description, k=top_k)
-    if not top_matches:
-        return JSONResponse(content={"message": "No candidates found."})
-
-    candidate_evaluations, final_decision = evaluate_candidates(job_description, top_matches)
-    return JSONResponse(content={"top_candidates": candidate_evaluations, "final_decision": final_decision})
+    result = run_autonomous_recruiter_agent(job_description)
+    return JSONResponse(content={"result": result})
 
 
 if __name__ == "__main__":
